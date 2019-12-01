@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>BrianMed.AspNetCore.SerilogW3cMiddleware</PackageId>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>BrianMed.AspNetCore.SerilogW3cMiddleware</RootNamespace>
+    <AssemblyName>BrianMed.AspNetCore.SerilogW3cMiddleware</AssemblyName>
+    <Authors>Brian Medley</Authors>
+    <Company>Brian Medley</Company>
+    <Description>Middleware that logs requests for ASP.NET Core in w3c format.</Description>
+    <Copyright>2019</Copyright>
+    <PackageProjectUrl>https://github.com/brianmed/SerilogW3cMiddleware</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/brianmed/SerilogW3cMiddleware</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>asp-net-core asp-net-mvc middleware logging w3c dotnet-core dotnet-standard</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>0.0.1</Version>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
