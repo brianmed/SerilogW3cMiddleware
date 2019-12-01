@@ -2,6 +2,8 @@
 
 Serilog W3C Logging Middleware for .Net Core MVC
 
+## NuGet [![NuGet](https://img.shields.io/nuget/v/BrianMed.AspNetCore.SerilogW3cMiddleware.svg)](https://www.nuget.org/packages/BrianMed.AspNetCore.SerilogW3cMiddleware)
+
 > dotnet add package BrianMed.AspNetCore.SerilogW3cMiddleware
 
 ### Usage
@@ -47,6 +49,8 @@ public class Startup
     }
 }
 ```
+
+> Output
 
 ```bash
 [20:46:13 INF] ::1 - - 30/Nov/2019:20:11:13 -0600 "GET / HTTP/1.1" begin:0HLRM12GN5SLP:00000001
