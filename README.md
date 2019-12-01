@@ -40,6 +40,7 @@ public class Startup
             options.DisplayBefore = true;
             options.DisplayAfter = true;
             options.DisplayExceptions = true;
+            options.StrictW3c = false;
         });    
     }
 
@@ -53,6 +54,6 @@ public class Startup
 > Output
 
 ```bash
-[20:46:13 INF] ::1 - - 30/Nov/2019:20:11:13 -0600 "GET / HTTP/1.1" begin:0HLRM12GN5SLP:00000001
-[20:46:13 INF] ::1 - - 30/Nov/2019:20:11:13 -0600 "GET / HTTP/1.1" 200 -1 31.867737 end:0HLRM12GN5SLP:00000001
+[13:39:40 INF] ::1 - - [01/Dec/2019:13:12:40 -0600] "GET / HTTP/1.1" 000 0 0 begin:0HLRMIOQHF8TL:00000001
+[13:39:40 INF] ::1 - - [01/Dec/2019:13:12:40 -0600] "GET / HTTP/1.1" 200 -1 35.549611 end:0HLRMIOQHF8TL:00000001
 ```
