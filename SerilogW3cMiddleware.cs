@@ -17,7 +17,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
 
         public bool DisplayAfter { get; set; } = true;
 
-        public bool DisplayExcetions { get; set; } = true;
+        public bool DisplayExceptions { get; set; } = true;
     }
 
     public class SerilogW3cMiddleware
@@ -59,7 +59,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
                         Log.Information($"{context.Request.HttpContext.Connection.RemoteIpAddress} - {context.User.Identity.Name ?? "-"} {now.ToString("dd/MMM/yyyy:HH:MM:ss ")}{now.ToString("zzz").Replace(":", "")} \"{context.Request.Method} {context.Request.Path} {context.Request.Protocol}\" 500 {context.Response?.ContentLength ?? -1} {elapsedMs} end:{context.TraceIdentifier} {ex.Message.Replace("\n", "|")}");
                     }
 
-                    if (Options.DisplayExcetions) {
+                    if (Options.DisplayExceptions) {
                         Log.Debug(ex.ToString());
                     }
                 }
