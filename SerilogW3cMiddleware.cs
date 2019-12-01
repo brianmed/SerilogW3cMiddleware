@@ -18,6 +18,8 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
         public bool DisplayAfter { get; set; } = true;
 
         public bool DisplayExceptions { get; set; } = true;
+
+        public bool RethrowExceptions { get; set; } = true;
     }
 
     public class SerilogW3cMiddleware
@@ -61,6 +63,10 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
 
                     if (Options.DisplayExceptions) {
                         Log.Debug(ex.ToString());
+                    }
+
+                    if (Options.RethrowExceptions) {
+                        throw;
                     }
                 }
         }
