@@ -64,7 +64,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
             try {
                 DateTime now = DateTime.Now;
 
-                logProperties.RemoteIpAddress = context.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                logProperties.RemoteIpAddress = context.Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "-";
                 logProperties.AuthUser = context.User.Identity.Name ?? "-";
                 logProperties.Date = $"{now.ToString("dd/MMM/yyyy:HH:MM:ss ")}{now.ToString("zzz").Replace(":", "")}";
                 logProperties.Method = context.Request.Method;
