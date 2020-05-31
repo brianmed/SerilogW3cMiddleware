@@ -37,6 +37,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
             public string StatusCode { get; set; } = String.Empty;
             public string ContentLength { get; set; } = String.Empty;
             public string ElapsedMs { get; set; } = String.Empty;
+            public string UserAgent { get; set; } = String.Empty;
             public string Identifier { get; set; } = String.Empty;
         }
 
@@ -73,6 +74,11 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
                 logProperties.StatusCode = "000";
                 logProperties.ContentLength = "0";
                 logProperties.ElapsedMs = "0";
+                if (context.Request.Headers.ContainsKey("User-Agent")) {
+                    logProperties.UserAgent = context.Request.Headers["User-Agent"].ToString();
+                } else {
+                    logProperties.UserAgent = "-";
+                }
                 logProperties.Identifier = $"begin:{context.TraceIdentifier}";
 
                 if (Options.DisplayBefore) {
@@ -117,13 +123,13 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
 
         private void LogIt(LogProperties properties)
         {
-            string messageTemplateDefault = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength} {ElapsedMs} {Identifier}";
+            string messageTemplateDefault = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength} {ElapsedMs} {UserAgent} {Identifier}";
             string messageTemplateStrictW3c = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength}";
 
             if (Options.StrictW3C) {
                 Log.Information(messageTemplateStrictW3c, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength);
             } else {
-                Log.Information(messageTemplateDefault, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength, properties.ElapsedMs, properties.Identifier);
+                Log.Information(messageTemplateDefault, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength, properties.ElapsedMs, properties.UserAgent, properties.Identifier);
             }
         }
 
