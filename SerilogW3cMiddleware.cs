@@ -123,7 +123,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
 
         private void LogIt(LogProperties properties)
         {
-            string messageTemplateDefault = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength} {ElapsedMs} {UserAgent} {Identifier}";
+            string messageTemplateDefault = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength} {ElapsedMs} \"{UserAgent}\" {Identifier}";
             string messageTemplateStrictW3c = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength}";
 
             if (Options.StrictW3C) {
