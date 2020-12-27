@@ -69,7 +69,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
                 logProperties.AuthUser = context.User.Identity.Name ?? "-";
                 logProperties.Date = $"{now.ToString("dd/MMM/yyyy:HH:MM:ss ")}{now.ToString("zzz").Replace(":", "")}";
                 logProperties.Method = context.Request.Method;
-                logProperties.Path = context.Request.Path;
+                logProperties.Path = $"{context.Request.Path}{context.Request.QueryString}";
                 logProperties.Protocol = context.Request.Protocol;
                 logProperties.StatusCode = "000";
                 logProperties.ContentLength = "0";
