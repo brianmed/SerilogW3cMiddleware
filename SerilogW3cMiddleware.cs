@@ -22,6 +22,8 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
         public bool RethrowExceptions { get; set; } = true;
 
         public bool StrictW3C { get; set; } = false;
+
+        public ILogger Logger { get; set; }
     }
 
     public class SerilogW3cMiddleware
@@ -43,12 +45,17 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
 
         private readonly RequestDelegate Next;
         private readonly SerilogW3cMiddlewareOptions Options;
+        private readonly ILogger Logger;
 
         public SerilogW3cMiddleware(RequestDelegate next, IOptions<SerilogW3cMiddlewareOptions> options)
         {
             Next = next;
 
             Options = options.Value;
+
+            if (Options.Logger is null) {
+                Options.Logger = Log.Logger;
+            }
         }
 
         public async Task Invoke(HttpContext context)
@@ -66,7 +73,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
                 DateTime now = DateTime.Now;
 
                 logProperties.RemoteIpAddress = context.Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "-";
-                logProperties.AuthUser = context.User.Identity.Name ?? "-";
+                logProperties.AuthUser = context.User?.Identity?.Name ?? "-";
                 logProperties.Date = $"{now.ToString("dd/MMM/yyyy:HH:MM:ss ")}{now.ToString("zzz").Replace(":", "")}";
                 logProperties.Method = context.Request.Method;
                 logProperties.Path = $"{context.Request.Path}{context.Request.QueryString}";
@@ -92,7 +99,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
 
                     logProperties.Date = $"{now.ToString("dd/MMM/yyyy:HH:MM:ss ")}{now.ToString("zzz").Replace(":", "")}";
                     logProperties.StatusCode = context.Response.StatusCode.ToString();
-                    logProperties.ContentLength = $"{context.Response?.ContentLength ?? -1}";
+                    logProperties.ContentLength = $"{context.Response?.ContentLength ?? context.Response.Headers?.ContentLength ?? context.Response?.Body.Length ?? -1}";
                     logProperties.ElapsedMs = GetElapsedMilliseconds(start, Stopwatch.GetTimestamp()).ToString();
                     logProperties.Identifier = $"end:{context.TraceIdentifier}";
 
@@ -127,9 +134,9 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
             string messageTemplateStrictW3c = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength}";
 
             if (Options.StrictW3C) {
-                Log.Information(messageTemplateStrictW3c, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength);
+                Options.Logger.Information(messageTemplateStrictW3c, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength);
             } else {
-                Log.Information(messageTemplateDefault, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength, properties.ElapsedMs, properties.UserAgent, properties.Identifier);
+                Options.Logger.Information(messageTemplateDefault, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength, properties.ElapsedMs, properties.UserAgent, properties.Identifier);
             }
         }
 
