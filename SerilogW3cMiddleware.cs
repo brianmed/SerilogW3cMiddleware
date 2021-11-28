@@ -99,7 +99,7 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
 
                     logProperties.Date = $"{now.ToString("dd/MMM/yyyy:HH:MM:ss ")}{now.ToString("zzz").Replace(":", "")}";
                     logProperties.StatusCode = context.Response.StatusCode.ToString();
-                    logProperties.ContentLength = $"{context.Response?.ContentLength ?? context.Response.Headers?.ContentLength ?? context.Response?.Body.Length ?? -1}";
+                    logProperties.ContentLength = $"{context.Response?.ContentLength ?? context.Response.Headers?.ContentLength ?? -1}";
                     logProperties.ElapsedMs = GetElapsedMilliseconds(start, Stopwatch.GetTimestamp()).ToString();
                     logProperties.Identifier = $"end:{context.TraceIdentifier}";
 
