@@ -52,15 +52,12 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
             Next = next;
 
             Options = options.Value;
-
-            if (Options.Logger is null) {
-                Options.Logger = Log.Logger;
-            }
         }
 
         public async Task Invoke(HttpContext context)
         {
-            if (Options.StrictW3C && Options.DisplayBefore) {
+            if (Options.StrictW3C && Options.DisplayBefore)
+            {
                 throw new ArgumentException("Can not set both StrictW3C and DisplayBefore");
             }
 
@@ -69,7 +66,8 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
             LogProperties logProperties = new LogProperties();
 
             // https://en.wikipedia.org/wiki/Common_Log_Format
-            try {
+            try
+            {
                 DateTime now = DateTime.Now;
 
                 logProperties.RemoteIpAddress = context.Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "-";
@@ -81,20 +79,25 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
                 logProperties.StatusCode = "000";
                 logProperties.ContentLength = "0";
                 logProperties.ElapsedMs = "0";
-                if (context.Request.Headers.ContainsKey("User-Agent")) {
+                if (context.Request.Headers.ContainsKey("User-Agent"))
+                {
                     logProperties.UserAgent = context.Request.Headers["User-Agent"].ToString();
-                } else {
+                }
+                else
+                {
                     logProperties.UserAgent = "-";
                 }
                 logProperties.Identifier = $"begin:{context.TraceIdentifier}";
 
-                if (Options.DisplayBefore) {
+                if (Options.DisplayBefore)
+                {
                     LogIt(logProperties);
                 }
 
                 await Next.Invoke(context);
 
-                if (Options.DisplayAfter) {
+                if (Options.DisplayAfter)
+                {
                     now = DateTime.Now;
 
                     logProperties.Date = $"{now.ToString("dd/MMM/yyyy:HH:MM:ss ")}{now.ToString("zzz").Replace(":", "")}";
@@ -105,8 +108,11 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
 
                     LogIt(logProperties);
                 }
-            } catch (Exception ex) {
-                if (Options.DisplayAfter) {
+            }
+            catch (Exception ex)
+            {
+                if (Options.DisplayAfter)
+                {
                     DateTime now = DateTime.Now;
 
                     logProperties.Date = $"{now.ToString("dd/MMM/yyyy:HH:MM:ss ")}{now.ToString("zzz").Replace(":", "")}";
@@ -118,11 +124,13 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
                     LogIt(logProperties);
                 }
 
-                if (Options.DisplayExceptions) {
+                if (Options.DisplayExceptions)
+                {
                     Log.Error(ex, $"Exception during \"{logProperties.Method} {logProperties.Path} {logProperties.Protocol}\"");
                 }
 
-                if (Options.RethrowExceptions) {
+                if (Options.RethrowExceptions)
+                {
                     throw;
                 }
             }
@@ -133,10 +141,13 @@ namespace BrianMed.AspNetCore.SerilogW3cMiddleware
             string messageTemplateDefault = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength} {ElapsedMs} \"{UserAgent}\" {Identifier}";
             string messageTemplateStrictW3c = "{RemoteIpAddress} - {AuthUser} [{Date}] \"{Method} {Path} {Protocol}\" {StatusCode} {ContentLength}";
 
-            if (Options.StrictW3C) {
-                Options.Logger.Information(messageTemplateStrictW3c, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength);
-            } else {
-                Options.Logger.Information(messageTemplateDefault, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength, properties.ElapsedMs, properties.UserAgent, properties.Identifier);
+            if (Options.StrictW3C)
+            {
+                (Options.Logger ?? Log.Logger).Information(messageTemplateStrictW3c, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength);
+            }
+            else
+            {
+                (Options.Logger ?? Log.Logger).Information(messageTemplateDefault, properties.RemoteIpAddress, properties.AuthUser, properties.Date, properties.Method, properties.Path, properties.Protocol, properties.StatusCode, properties.ContentLength, properties.ElapsedMs, properties.UserAgent, properties.Identifier);
             }
         }
 
